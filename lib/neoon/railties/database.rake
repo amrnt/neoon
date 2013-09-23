@@ -1,0 +1,2 @@
+namespace :db do
+end
