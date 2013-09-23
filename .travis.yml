@@ -4,6 +4,9 @@ rvm:
   - 2.0.0
   - jruby
 jdk:
+  - oraclejdk7
   - openjdk7
-services:
-  - neo4j
+before_script:
+  - bundle exec rake neo4j:server:install neo4j:server:start
+after_script:
+  - bundle exec rake neo4j:server:stop

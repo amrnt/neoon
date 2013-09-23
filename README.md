@@ -22,6 +22,20 @@ Or install it yourself as:
 
 ## Usage
 
+You can easily install Neo4j in your application path:
+
+```ruby
+bundle exec rake neo4j:server:install
+```
+
+Then start(stop/restart) the Neo4j server by:
+
+```ruby
+bundle exec rake neo4j:server:start
+bundle exec rake neo4j:server:stop
+bundle exec rake neo4j:server:restart
+```
+
 First you have to initialize  a client:
 
 ```ruby
@@ -34,7 +48,7 @@ Set configuration:
 
 ```ruby
 Neoon.configure do |config|
-  config.preload_models = true # (default: false) This will load your models — so to update the indexes at the (Rails) boot
+  config.preload_models = true # This will load your models — helps updating the indexed nodes at the (Rails) boot (default: false)
 end
 ```
 
@@ -80,7 +94,7 @@ Topic.neo_index_create [:name, ...]
 
 Topic.neo_index_drop [:name, ...]
 
-# Sync the indexes you described in model config. It returns the indexed fields.
+# Sync the indexed nodes as described in each model config. It returns the indexed fields.
 # Remember, this will be called on each model on the boot if preload_models set to true.
 Topic.neo_index_update #=> ["slug"]
 ```
@@ -89,8 +103,8 @@ Topic.neo_index_update #=> ["slug"]
 
 ## TODO
 
-1. ADD TESTS
-2. ..
+1. Add inline docs
+2. ADD TESTS!!!
 
 ## Contributing
 

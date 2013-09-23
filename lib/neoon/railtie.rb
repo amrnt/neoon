@@ -6,7 +6,8 @@ module Rails
     class Railtie < ::Rails::Railtie
 
       rake_tasks do
-        load "neoon/railties/database.rake"
+        load 'neoon/tasks/server.rake'
+        load 'neoon/tasks/database.rake'
       end
 
       initializer "neoon.neo_index_update" do
