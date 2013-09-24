@@ -24,14 +24,8 @@ module Neoon
         neo_index_list
       end
 
-    private
-
-      def neo_model_props
-        self.neo_model_config.properties
-      end
-
       def neo_node_keys_to_index
-        neo_model_props.select{ |k, v| v[:index]==true }.keys.map(&:to_s).sort
+        neo_model_config.properties.select{ |k, v| v[:index]==true }.keys.sort
       end
 
     end

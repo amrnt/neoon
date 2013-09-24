@@ -4,7 +4,7 @@ module Neoon
 
       def list(label)
         Neoon.db.get("/schema/index/#{label}")
-          .map{|f| f.send("property-keys")}.flatten.map(&:to_s).sort
+          .map{|f| f.send("property-keys")}.flatten.map(&:to_sym).sort
       end
 
       def create(label, keys = [])
@@ -17,7 +17,6 @@ module Neoon
         keys.each do |key|
           Neoon.db.cypher("DROP INDEX ON :#{label}(#{key.to_s.downcase})")
         end
-        neo_index_list
       end
 
     end

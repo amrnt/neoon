@@ -20,8 +20,16 @@ module Neoon
       end
 
       module InstanceMethods
-        def neo_node_props
-          neo_node.merge({ :db_id => self.id })
+        def neo_node_properties
+          _neo_node.merge({ :db_id => self.id })
+        end
+
+        def neo_node
+          cypher_query = <<-CYPHER
+            MATCH node:#{self.class.name} WHERE node.db_id = #{self.id}
+            RETURN node
+          CYPHER
+          Neoon.db.q(cypher_query).data.first.first.data
         end
 
         def neo_save
@@ -31,20 +39,23 @@ module Neoon
             ON MATCH node SET node = {props}
             RETURN node
           CYPHER
-          Neoon.db.q(cypher_query, { :props => neo_node_props })
+          Neoon.db.q(cypher_query, { :props => neo_node_properties })
         end
 
         def neo_destroy
           cypher_query = <<-CYPHER
+            MATCH node:#{self.class.name}
+            WHERE node.db_id = #{self.id}
+            DELETE node
           CYPHER
           Neoon.db.q(cypher_query)
         end
 
       protected
 
-        def neo_node
-          return {} unless self.class.neo_model_props
-          hash = self.class.neo_model_props.inject({}) do |all, (field, block)|
+        def _neo_node
+          return {} unless self.class.neo_model_config.properties
+          hash = self.class.neo_model_config.properties.inject({}) do |all, (field, block)|
             all[field] = if block[:block]
               instance_eval(&block[:block])
             else
@@ -62,6 +73,7 @@ module Neoon
         receiver.send :include, InstanceMethods
 
         receiver.after_save :neo_save
+        receiver.after_destroy :neo_destroy
       end
 
     end

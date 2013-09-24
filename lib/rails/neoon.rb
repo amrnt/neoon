@@ -6,13 +6,13 @@ module Rails
       models.each do |path|
         files = Dir.glob("#{path}/**/*.rb")
         files.sort.each do |file|
-          load_model(file.gsub("#{path}/" , "").gsub(".rb", ""))
+          load_model(file.gsub("#{path}/" , '').gsub('.rb', ''))
         end
       end
     end
 
     def preload_models(app)
-      models = app.config.paths["app/models"]
+      models = app.config.paths['app/models']
       load_models(models) if ::Neoon.config.preload_models
     end
 

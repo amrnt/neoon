@@ -32,7 +32,9 @@ Then start(stop/restart) the Neo4j server by:
 
 ```ruby
 bundle exec rake neo4j:server:start
+
 bundle exec rake neo4j:server:stop
+
 bundle exec rake neo4j:server:restart
 ```
 
@@ -55,7 +57,7 @@ end
 To query using Cypher:
 
 ```ruby
-$neo.q("START node=node(*) RETURN node")
+$neo.q('START node=node(*) RETURN node')
 ```
 
 To your ActiveRecord model, initialize Neoon like so (with example of using properties/index):
@@ -77,18 +79,18 @@ end
 
 ### Indexing
 
-This will be used internally to auto indexing the model depends on what described in the neoon model config.
+This will be used internally to auto indexing models nodes.
 
 ```ruby
-Neoon.db.list 'Topic' #=> ["slug"]
+Neoon.db.list 'Topic' #=> [:slug]
 
 Neoon.db.create 'Topic', [:name, ...]
 
-Neoon.db.drop 'Topic' [:name, ...]
+Neoon.db.drop 'Topic', [:name, ...]
 
 # Alternativly
 
-Topic.neo_index_list #=> ["slug"]
+Topic.neo_index_list #=> [:slug]
 
 Topic.neo_index_create [:name, ...]
 
@@ -96,7 +98,7 @@ Topic.neo_index_drop [:name, ...]
 
 # Sync the indexed nodes as described in each model config. It returns the indexed fields.
 # Remember, this will be called on each model on the boot if preload_models set to true.
-Topic.neo_index_update #=> ["slug"]
+Topic.neo_index_update #=> [:slug]
 ```
 
 **The gem is still at heavy development. More to come!**

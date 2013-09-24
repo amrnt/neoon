@@ -15,7 +15,7 @@ namespace :neo4j do
 
     desc 'Start Neo4j server'
     task :start do
-      puts "Starting Neo4j..."
+      puts 'Starting Neo4j...'
       %x[neo4j/bin/neo4j start]
     end
 

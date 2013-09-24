@@ -10,13 +10,13 @@ module Rails
         load 'neoon/tasks/database.rake'
       end
 
-      initializer "neoon.neo_index_update" do
+      initializer 'neoon.neo_index_update' do
         config.after_initialize do
           ::Neoon.config.models.each(&:neo_index_update)
         end
       end
 
-      initializer "neoon.preload_models" do |app|
+      initializer 'neoon.preload_models' do |app|
         config.to_prepare do
           Rails::Neoon.preload_models(app)
         end
