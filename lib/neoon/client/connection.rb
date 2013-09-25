@@ -12,7 +12,6 @@ module Neoon
       end
 
       include Request
-      include Indexing
 
     private
 

@@ -3,13 +3,18 @@ require 'multi_json'
 require 'neoon/version'
 require 'neoon/config'
 require 'neoon/client/request'
-require 'neoon/client/indexing'
 require 'neoon/client/connection'
+
+require 'neoon/cypher/cypher'
+require 'neoon/cypher/cypher_query'
+require 'neoon/cypher/cypher_instance_query'
 
 require 'neoon/model/config'
 require 'neoon/model/schema'
-require 'neoon/model/service'
+require 'neoon/model/node'
+
 require 'neoon/node'
+
 
 if defined?(Rails)
   require 'neoon/railtie'

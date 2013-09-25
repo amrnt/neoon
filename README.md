@@ -82,14 +82,6 @@ end
 This will be used internally to auto indexing models nodes.
 
 ```ruby
-Neoon.db.list 'Topic' #=> [:slug]
-
-Neoon.db.create 'Topic', [:name, ...]
-
-Neoon.db.drop 'Topic', [:name, ...]
-
-# Alternativly
-
 Topic.neo_index_list #=> [:slug]
 
 Topic.neo_index_create [:name, ...]
