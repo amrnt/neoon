@@ -11,7 +11,7 @@ module Neoon
 
     def find_node
       cypher_query = <<-CYPHER
-        MATCH node:#{label} WHERE node.db_id = #{id}
+        MATCH node:#{label} WHERE node._id = #{id}
         RETURN node
       CYPHER
       cypherable(:query => cypher_query)
@@ -19,7 +19,7 @@ module Neoon
 
     def create_node
       cypher_query = <<-CYPHER
-        MERGE (node:#{label} { db_id: #{id} })
+        MERGE (node:#{label} { _id: #{id} })
         ON CREATE node SET node = {props}
         ON MATCH node SET node = {props}
         RETURN node
@@ -32,7 +32,7 @@ module Neoon
     def delete_node
       cypher_query = <<-CYPHER
         MATCH node:#{label}
-        WHERE node.db_id = #{id}
+        WHERE node._id = #{id}
         DELETE node
       CYPHER
       cypherable(:query => cypher_query)

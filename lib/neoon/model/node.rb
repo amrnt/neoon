@@ -17,7 +17,7 @@ module Neoon
       end
 
       def neo_node_properties
-        _neo_node.merge({ :db_id => self.id })
+        _neo_node.merge({ :_id => self.id })
       end
 
     protected
