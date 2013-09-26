@@ -10,9 +10,9 @@ module Rails
         load 'neoon/tasks/database.rake'
       end
 
-      initializer 'neoon.neo_index_update' do
+      initializer 'neoon.neo_schema_update' do
         config.after_initialize do
-          ::Neoon.config.models.each(&:neo_index_update)
+          ::Neoon.config.models.each(&:neo_schema_update)
         end
       end
 

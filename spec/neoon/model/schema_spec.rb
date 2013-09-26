@@ -4,16 +4,16 @@ describe Neoon::Model::Schema do
 
   before do
     require 'app/models/topic'
-    Topic.neo_index_update
+    Topic.neo_schema_update
   end
 
   context 'list index' do
-    it 'responds to neo_node_keys_to_index' do
-      Topic.respond_to?(:neo_node_keys_to_index).should be_true
+    it 'responds to neo_schema_index_keys' do
+      Topic.respond_to?(:neo_schema_index_keys).should be_true
     end
 
     it 'returns indexed properties from model config' do
-      Topic.neo_node_keys_to_index.should == [:slug]
+      Topic.neo_schema_index_keys.should == [:slug]
     end
 
     it 'returns indexed properties from Neo4j' do

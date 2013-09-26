@@ -23,7 +23,7 @@ module Neoon
     protected
 
       def _cypher_query
-        Neoon::CypherInstanceQuery.new(self)
+        Neoon::Cypher::InstanceQuery.new(self)
       end
 
       def _neo_node

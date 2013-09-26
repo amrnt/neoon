@@ -88,9 +88,16 @@ Topic.neo_index_create [:name, ...]
 
 Topic.neo_index_drop [:name, ...]
 
+# To create/drop *unique* indexes or "constraints" pass true as a second argument.
+
+Topic.neo_index_create [:name, ...], true
+
+Topic.neo_index_drop [:name, ...], true
+
+#
 # Sync the indexed nodes as described in each model config. It returns the indexed fields.
 # Remember, this will be called on each model on the boot if preload_models set to true.
-Topic.neo_index_update #=> [:slug]
+Topic.neo_schema_update #=> [:slug]
 ```
 
 **The gem is still at heavy development. More to come!**
