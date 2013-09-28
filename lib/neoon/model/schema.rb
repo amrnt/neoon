@@ -7,29 +7,35 @@ module Neoon
       end
 
       def neo_index_create key
-        index_key      = ([key] & neo_schema_index_keys).first
-        index_uniq_key = ([key] & neo_schema_index_keys_unique).first
-
-        _cypher_query.create_index(index_key).run if index_key
-        _cypher_query.create_constraints(index_uniq_key).run if index_uniq_key
+        if neo_schema_index_keys.select { |k,v| v == 'UNIQUENESS' }.include? key
+          _cypher_query.create_constraints(key).run
+        else
+          _cypher_query.create_index(key).run
+        end
         true
       end
 
       def neo_index_drop key
-        index_key      = ([key] & neo_schema_index_keys).first
-        index_uniq_key = ([key] & neo_schema_index_keys_unique).first
-
-        _cypher_query.drop_index(index_key).run if index_key
-        _cypher_query.drop_constraints(index_uniq_key).run if index_uniq_key
+        if neo_index_list[key] == 'UNIQUENESS'
+          _cypher_query.drop_constraints(key).run
+        else
+          _cypher_query.drop_index(key).run
+        end
         true
       end
 
-      def neo_index_update
-        cl, ck = neo_index_list.keys, neo_schema_index_keys + neo_schema_index_keys_unique
-        return cl if cl == ck
+      def neo_index_drop_all
+        neo_index_list.each { |k, _| neo_index_drop(k) }
+      end
 
-        (ck - cl).each{ |k| neo_index_create(k) } unless (ck - cl).empty?
-        (cl - ck).each{ |k| neo_index_drop(k) } unless (cl - ck).empty?
+      def neo_index_update
+        # binding.pry
+        cl, ck = neo_index_list.to_a, neo_schema_index_keys.to_a
+        return cl if cl == ck
+        return neo_index_drop_all if ck.empty?
+
+        (cl - ck).each{ |k| neo_index_drop(k.first) } unless (cl - ck).empty?
+        (ck - cl).each{ |k| neo_index_create(k.first) } unless (ck - cl).empty?
       end
 
       def neo_schema_update
@@ -38,11 +44,11 @@ module Neoon
       end
 
       def neo_schema_index_keys
-        neo_model_config.properties.select{ |k, v| v[:index] == true }.keys.sort
-      end
-
-      def neo_schema_index_keys_unique
-        neo_model_config.properties.select{ |k, v| v[:index] == :unique }.keys.sort
+        neo_model_config.properties.inject({}) do |all, (k, v)|
+          all[k] = true if v[:index]
+          all[k] = 'UNIQUENESS' if v[:index] == :unique
+          all
+        end
       end
 
     protected

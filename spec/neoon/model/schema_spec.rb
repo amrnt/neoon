@@ -12,18 +12,16 @@ describe Neoon::Model::Schema do
       it 'responds to neo_schema_index_keys' do
         expect(Topic).to respond_to(:neo_schema_index_keys)
       end
-
-      it 'responds to neo_schema_index_keys' do
-        expect(Topic).to respond_to(:neo_schema_index_keys_unique)
+      it 'returns all indexed properties' do
+        expect(Topic.neo_schema_index_keys.keys).to eql [:name, :slug]
       end
-
       it 'returns indexed properties' do
-        expect(Topic.neo_schema_index_keys).to eql [:name]
+        expect(Topic.neo_schema_index_keys.select{|_, v| v == true}.keys).to eql [:name]
+      end
+      it 'returns unique indexed properties' do
+        expect(Topic.neo_schema_index_keys.select{|_, v| v == 'UNIQUENESS'}.keys).to eql [:slug]
       end
 
-      it 'returns unique indexed properties' do
-        expect(Topic.neo_schema_index_keys_unique).to eql [:slug]
-      end
     end
 
     context 'from Neo4j' do
@@ -89,7 +87,7 @@ describe Neoon::Model::Schema do
         expect(Topic.neo_index_list.keys).to eql []
 
         expect { Topic.neo_index_drop(:name) }.to raise_error Neoon::Error::DropIndexFailureException
-        expect { Topic.neo_index_drop(:slug) }.to raise_error Neoon::Error::DropConstraintFailureException
+        expect { Topic.neo_index_drop(:slug) }.to raise_error Neoon::Error::DropIndexFailureException
       end
     end
 

@@ -83,22 +83,36 @@ end
 This will be used internally to auto indexing models nodes.
 
 ```ruby
-Topic.neo_index_list #=> [:slug]
-
-Topic.neo_index_create [:name, ...]
-
-Topic.neo_index_drop [:name, ...]
-
-# To create/drop *unique* indexes or "constraints" pass true as a second argument.
-
-Topic.neo_index_create [:name, ...], true
-
-Topic.neo_index_drop [:name, ...], true
+Topic.neo_index_list #=> [:name, :slug]
 
 #
 # Sync the indexed nodes as described in each model config. It returns the indexed fields.
 # Remember, this will be called on each model on the boot if preload_models set to true.
-Topic.neo_schema_update #=> [:slug]
+Topic.neo_schema_update #=> [:name, :slug]
+```
+
+You can use `Neoon::Cypher::Query` to manually create indexes or constraints. `Neoon::Cypher::Query` used for operations on labeled nodes.
+
+```ruby
+l = Neoon::Cypher::Query.new('Person') #=> #<Neoon::Cypher::Query:0x007fe8926d2068 @label="Person">
+
+l.create_index(:name).run
+# l.drop_index(:name).run
+
+l.create_constraints(:username).run
+# l.drop_constraints(:username).run
+
+l.list_indexes                         #=> { :name => true, :username => "UNIQUENESS" }
+```
+
+Unlike `Neoon::Cypher::InstanceQuery` which used for operations on an object with `id, label, args`.
+
+```ruby
+t = Neoon::Cypher::InstanceQuery.new(Topic.first) #=> #<Neoon::Cypher::InstanceQuery:0x007fe894410b98 @id=1, @label="Topic", @args={...}>
+
+t.find_node.run    #=> No node for this object in Neo4j
+t.create_node.run  #=> Create object node/or update it
+t.delete_node.run  #=> Remove object node
 ```
 
 **The gem is still at heavy development. More to come!**

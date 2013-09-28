@@ -7,7 +7,7 @@ module Faraday
           case env[:status]
           when (400..499)
             body = JSON.parse(env[:body])
-            raise Object.const_get("Neoon::Error::#{body["cause"]["exception"]}"), "#{{
+            raise "Neoon::Error::#{body["cause"]["exception"]}".constantize, "#{{
               :message => body["message"],
               :exception => body["exception"],
               :cause => {
