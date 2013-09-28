@@ -4,7 +4,7 @@
 
 A simple Ruby wrapper for Neo4j with focus on Cypher and the features of Neo4j 2.0
 
-#### Inspired by [Neoid](https://github.com/elado/neoid)
+---
 
 ## Installation
 
@@ -60,7 +60,7 @@ To query using Cypher:
 $neo.q('START node=node(*) RETURN node')
 ```
 
-To your ActiveRecord model, initialize Neoon like so (with example of using properties/index):
+With ActiveRecord models, initialize Neoon like so (with example of using properties/index):
 
 ```ruby
 class Topic < ActiveRecord::Base
@@ -78,9 +78,9 @@ class Topic < ActiveRecord::Base
 end
 ```
 
-### Indexing
+#### Indexing
 
-This will be used internally to auto indexing models nodes.
+This will be used internally to auto index models nodes.
 
 ```ruby
 Topic.neo_index_list #=> [:name, :slug]
@@ -91,7 +91,11 @@ Topic.neo_index_list #=> [:name, :slug]
 Topic.neo_schema_update #=> [:name, :slug]
 ```
 
-You can use `Neoon::Cypher::Query` to manually create indexes or constraints. `Neoon::Cypher::Query` used for operations on labeled nodes.
+---
+
+### Neoon::Cypher::Query
+
+`Neoon::Cypher::InstanceQuery` should be initialized with an Class name or `label`. You can use `Neoon::Cypher::Query` to manually create indexes, constraints, etc.
 
 ```ruby
 l = Neoon::Cypher::Query.new('Person') #=> #<Neoon::Cypher::Query:0x007fe8926d2068 @label="Person">
@@ -105,15 +109,40 @@ l.create_constraints(:username).run
 l.list_indexes                         #=> { :name => true, :username => "UNIQUENESS" }
 ```
 
-Unlike `Neoon::Cypher::InstanceQuery` which used for operations on an object with `id, label, args`.
+---
+
+### Neoon::Cypher::InstanceQuery
+
+`Neoon::Cypher::InstanceQuery` should be initialized with an object that respond to `id`, `class.name` as it will represent the `label` and `neo_node_properties` as it will represent the `args`.
+
+You can use `Neoon::Cypher::InstanceQuery` to manually create operations on nodes related to an object, etc.
+
+Use it with Struct:
+
+```ruby
+Customer = Struct.new(:id, :neo_node_properties)
+cus = Customer.new(50, {:name => 'Julie', :address => 'PS'}) #=> #<Neoon::Cypher::InstanceQuery:0x007feb35953d00 @id=50, @label="Customer", @args={:name=>"Julie", :address=>"PS"}>
+
+c = Neoon::Cypher::InstanceQuery.new(cus)
+
+c.find_node.run    #=> Return node in Neo4j if already saved
+c.create_node.run  #=> Create object node / or update it
+c.delete_node.run  #=> Remove object node
+```
+
+Note that the key of finding nodes in Neo4j is `id` as saved in Neo4j with key `db_id`.
+
+Another example on the model we defined above:
 
 ```ruby
 t = Neoon::Cypher::InstanceQuery.new(Topic.first) #=> #<Neoon::Cypher::InstanceQuery:0x007fe894410b98 @id=1, @label="Topic", @args={...}>
 
-t.find_node.run    #=> No node for this object in Neo4j
-t.create_node.run  #=> Create object node/or update it
+t.find_node.run    #=> Returns node in Neo4j if already saved
+t.create_node.run  #=> Create object node / or update it
 t.delete_node.run  #=> Remove object node
 ```
+
+---
 
 **The gem is still at heavy development. More to come!**
 

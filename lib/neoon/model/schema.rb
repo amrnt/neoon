@@ -29,7 +29,6 @@ module Neoon
       end
 
       def neo_index_update
-        # binding.pry
         cl, ck = neo_index_list.to_a, neo_schema_index_keys.to_a
         return cl if cl == ck
         return neo_index_drop_all if ck.empty?
@@ -40,7 +39,7 @@ module Neoon
 
       def neo_schema_update
         neo_index_update
-        neo_index_list.keys
+        neo_index_list
       end
 
       def neo_schema_index_keys
