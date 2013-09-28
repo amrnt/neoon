@@ -1,7 +1,12 @@
 require 'multi_json'
+require 'faraday'
+require 'faraday_middleware'
+require 'faraday/neoon/raise_error'
 
 require 'neoon/version'
 require 'neoon/config'
+require 'neoon/error'
+
 require 'neoon/client/request'
 require 'neoon/client/connection'
 

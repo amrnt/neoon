@@ -3,45 +3,38 @@ module Neoon
     module Schema
 
       def neo_index_list
-        _cypher_query.list_index
+        _cypher_query.list_indexes
       end
 
-      def neo_index_create keys = [], unique = false
-        if unique
-          _cypher_query.create_constraints(keys).run
-        else
-          _cypher_query.create_index(keys).run
-        end
+      def neo_index_create key
+        index_key      = ([key] & neo_schema_index_keys).first
+        index_uniq_key = ([key] & neo_schema_index_keys_unique).first
+
+        _cypher_query.create_index(index_key).run if index_key
+        _cypher_query.create_constraints(index_uniq_key).run if index_uniq_key
+        true
       end
 
-      def neo_index_drop keys = [], unique = false
-        if unique
-          _cypher_query.drop_constraints(keys).run
-        else
-          _cypher_query.drop_index(keys).run
-        end
-      end
+      def neo_index_drop key
+        index_key      = ([key] & neo_schema_index_keys).first
+        index_uniq_key = ([key] & neo_schema_index_keys_unique).first
 
-      def neo_index_update_unique
-        cl, ck = neo_index_list, neo_schema_index_keys_unique
-        return cl if (cl) == (ck)
-
-        neo_index_create(ck - cl, true) unless (ck - cl).empty?
-        neo_index_drop(cl - ck, true) unless (cl - ck).empty?
+        _cypher_query.drop_index(index_key).run if index_key
+        _cypher_query.drop_constraints(index_uniq_key).run if index_uniq_key
+        true
       end
 
       def neo_index_update
-        cl, ck = neo_index_list, neo_schema_index_keys
-        return cl if (cl) == (ck)
+        cl, ck = neo_index_list.keys, neo_schema_index_keys + neo_schema_index_keys_unique
+        return cl if cl == ck
 
-        neo_index_create(ck - cl) unless (ck - cl).empty?
-        neo_index_drop(cl - ck) unless (cl - ck).empty?
+        (ck - cl).each{ |k| neo_index_create(k) } unless (ck - cl).empty?
+        (cl - ck).each{ |k| neo_index_drop(k) } unless (cl - ck).empty?
       end
 
       def neo_schema_update
         neo_index_update
-        neo_index_update_unique
-        neo_index_list
+        neo_index_list.keys
       end
 
       def neo_schema_index_keys

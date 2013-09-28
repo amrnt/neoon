@@ -4,15 +4,15 @@ describe Neoon::Config do
 
   context 'no block given' do
     it 'returns the config singleton' do
-      Neoon.config.should eq Neoon::config
+      expect(Neoon.config.class).to eq Neoon::Config
     end
 
     it 'returns config.preload_models false' do
-      Neoon.config.preload_models.should be_false
+      expect(Neoon.config.preload_models).to be_false
     end
 
     it 'should have no model' do
-      Neoon.config.models.should be_empty
+      expect(Neoon.config.models).to be_empty
     end
   end
 
@@ -31,11 +31,11 @@ describe Neoon::Config do
     end
 
     it 'returns config.preload_models true' do
-      Neoon.config.preload_models.should be_true
+      expect(Neoon.config.preload_models).to be_true
     end
 
     it 'should have models' do
-      Neoon.config.models.should_not be_empty
+      expect(Neoon.config.models).not_to be_empty
     end
   end
 

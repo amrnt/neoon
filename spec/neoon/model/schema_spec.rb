@@ -8,49 +8,99 @@ describe Neoon::Model::Schema do
   end
 
   context 'list index' do
-    it 'responds to neo_schema_index_keys' do
-      Topic.respond_to?(:neo_schema_index_keys).should be_true
+    context 'from model config' do
+      it 'responds to neo_schema_index_keys' do
+        expect(Topic).to respond_to(:neo_schema_index_keys)
+      end
+
+      it 'responds to neo_schema_index_keys' do
+        expect(Topic).to respond_to(:neo_schema_index_keys_unique)
+      end
+
+      it 'returns indexed properties' do
+        expect(Topic.neo_schema_index_keys).to eql [:name]
+      end
+
+      it 'returns unique indexed properties' do
+        expect(Topic.neo_schema_index_keys_unique).to eql [:slug]
+      end
     end
 
-    it 'returns indexed properties from model config' do
-      Topic.neo_schema_index_keys.should == [:slug]
-    end
-
-    it 'returns indexed properties from Neo4j' do
-      Topic.neo_index_list.should == [:slug]
-    end
-  end
-
-  context 'create index' do
-    it 'responds to neo_index_create' do
-      Topic.respond_to?(:neo_index_create).should be_true
-    end
-
-    it 'creates indexes for properties' do
-      Topic.neo_index_create([:name]).should be_true
-      Topic.neo_index_create([:slug]).should be_true
-      Topic.neo_index_create([:name, :slug]).should be_true
-      Topic.neo_index_list.should == [:name, :slug]
-    end
-
-  end
-
-  context 'drop index' do
-    it 'responds to neo_index_drop' do
-      Topic.respond_to?(:neo_index_create).should be_true
-    end
-
-    it 'drops indexes for properties' do
-      Topic.neo_index_drop([:name]).should be_true
-      Topic.neo_index_drop([:slug]).should be_true
-      Topic.neo_index_drop([:name, :slug]).should be_true
-      Topic.neo_index_list.should == []
+    context 'from Neo4j' do
+      it 'returns all indexed properties' do
+        expect(Topic.neo_index_list.keys).to eql [:name, :slug]
+      end
+      it 'returns indexed properties' do
+        expect(Topic.neo_index_list.select{|_, v| v == true}.keys).to eql [:name]
+      end
+      it 'returns unique indexed properties' do
+        expect(Topic.neo_index_list.select{|_, v| v == 'UNIQUENESS'}.keys).to eql [:slug]
+      end
     end
   end
 
-  context 'update index' do
-    it 'updates index as in model config' do
-      Topic.neo_index_list.should == [:slug]
+  context 'index operation' do
+    before :each do
+      begin
+        Topic.neo_index_drop(:name)
+        Topic.neo_index_drop(:slug)
+      rescue
+
+      end
+    end
+
+    it 'no indexes in Neo4j' do
+      expect(Topic.neo_index_list.keys).to eql []
+    end
+
+    context 'create index' do
+      it 'responds to neo_index_create' do
+        expect(Topic).to respond_to(:neo_index_create)
+      end
+
+      it 'creates indexes for properties' do
+        expect(Topic.neo_index_create(:name)).to be_true
+        expect(Topic.neo_index_list.keys).to eql [:name]
+
+        expect(Topic.neo_index_create(:slug)).to be_true
+        expect(Topic.neo_index_list.keys).to eql [:name, :slug]
+
+        expect { Topic.neo_index_create(:name) }.to raise_error Neoon::Error::AlreadyIndexedException
+        expect { Topic.neo_index_create(:slug) }.to raise_error Neoon::Error::AlreadyConstrainedException
+      end
+
+    end
+
+    context 'drop index' do
+      before do
+        Topic.neo_index_create(:name)
+        Topic.neo_index_create(:slug)
+      end
+
+      it 'responds to neo_index_drop' do
+        expect(Topic).to respond_to(:neo_index_drop)
+      end
+
+      it 'drops indexes for properties' do
+        expect(Topic.neo_index_drop(:name)).to be_true
+        expect(Topic.neo_index_list.keys).to eql [:slug]
+
+        expect(Topic.neo_index_drop(:slug)).to be_true
+        expect(Topic.neo_index_list.keys).to eql []
+
+        expect { Topic.neo_index_drop(:name) }.to raise_error Neoon::Error::DropIndexFailureException
+        expect { Topic.neo_index_drop(:slug) }.to raise_error Neoon::Error::DropConstraintFailureException
+      end
+    end
+
+    context 'update index' do
+      before do
+        Topic.neo_schema_update
+      end
+
+      it 'updates index as in model config' do
+        Topic.neo_index_list.keys.should == [:name, :slug]
+      end
     end
   end
 

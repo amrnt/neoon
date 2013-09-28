@@ -6,28 +6,26 @@ describe Neoon::Model::Config do
     require 'app/models/topic'
   end
 
-  context 'Model' do
-    it 'responds to neoon' do
-      Topic.respond_to?(:neoon).should be_true
-    end
-
-    it 'responds to neo_model_config' do
-      Topic.respond_to?(:neo_model_config).should be_true
-    end
+  it 'returns the model config singleton' do
+    expect(Topic.neo_model_config.class).to eq Neoon::Model::Config
   end
 
   context 'properties' do
     it 'stores them' do
-      Topic.neo_model_config.properties.should_not be_nil
-      Topic.neo_model_config.properties.keys.should == [ :name, :slug ]
+      expect(Topic.neo_model_config.properties).not_to be_nil
+      expect(Topic.neo_model_config.properties.keys).to eql [ :name, :slug, :created_at ]
     end
 
     it 'has block' do
-      Topic.neo_model_config.properties[:slug][:block].should be_a(Proc)
+      expect(Topic.neo_model_config.properties[:slug][:block]).to be_a(Proc)
     end
 
     it 'has index' do
-      Topic.neo_model_config.properties[:slug][:index].should be_true
+      expect(Topic.neo_model_config.properties[:name][:index]).to be_true
+    end
+
+    it 'has unique index' do
+      expect(Topic.neo_model_config.properties[:slug][:index]).to eql :unique
     end
   end
 

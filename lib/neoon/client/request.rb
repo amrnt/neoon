@@ -1,5 +1,3 @@
-require 'faraday_middleware'
-
 module Neoon
   module Client
     module Request

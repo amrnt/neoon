@@ -3,25 +3,19 @@ module Neoon
     module Schema
       module Indexes
 
-        def list_index
+        def list_indexes
           # The only none Cypher query
-          Neoon.db.get("/schema/index/#{label}")
-            .map{|f| f.send("property-keys")}.flatten.map(&:to_sym).sort
+          idx_keys = Neoon.db.get("/schema/index/#{label}") + Neoon.db.get("/schema/constraint/#{label}")
+          idx_keys.reduce({}) { |k, v| k[v.send('property-keys').first.to_sym] = v.type || true; k }
         end
 
-        def create_index(keys = [])
-          cypher_query = []
-          keys.each do |key|
-            cypher_query << "CREATE INDEX ON :#{label}(#{key.to_s.downcase})"
-          end
+        def create_index(key)
+          cypher_query = "CREATE INDEX ON :#{label}(#{key.to_s.downcase})"
           cypherable(:query => cypher_query)
         end
 
-        def drop_index(keys = [])
-          cypher_query = []
-          keys.each do |key|
-            cypher_query << "DROP INDEX ON :#{label}(#{key.to_s.downcase})"
-          end
+        def drop_index(key)
+          cypher_query = "DROP INDEX ON :#{label}(#{key.to_s.downcase})"
           cypherable(:query => cypher_query)
         end
 

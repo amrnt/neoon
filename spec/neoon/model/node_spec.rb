@@ -7,6 +7,16 @@ describe Neoon::Model::Node do
     Topic.destroy_all
   end
 
+  context '' do
+    it 'responds to neoon' do
+      expect(Topic).to respond_to(:neoon)
+    end
+
+    it 'responds to neo_model_config' do
+      expect(Topic).to respond_to(:neo_model_config)
+    end
+  end
+
   context 'save' do
     before do
       @t = Topic.where(:name => 'Apple').first_or_create

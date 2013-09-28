@@ -35,6 +35,7 @@ module Neoon
           builder.use FaradayMiddleware::EncodeJson
           builder.use FaradayMiddleware::Mashify
           builder.use FaradayMiddleware::ParseJson, :content_type => /\bjson$/
+          builder.use Faraday::Neoon::RaiseError
 
           builder.adapter Faraday.default_adapter
         end
