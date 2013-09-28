@@ -8,7 +8,7 @@ module Neoon
 
       def neo_index_create key
         if neo_schema_index_keys.select { |k,v| v == 'UNIQUENESS' }.include? key
-          _cypher_query.create_constraints(key).run
+          _cypher_query.create_constraint(key).run
         else
           _cypher_query.create_index(key).run
         end
@@ -17,7 +17,7 @@ module Neoon
 
       def neo_index_drop key
         if neo_index_list[key] == 'UNIQUENESS'
-          _cypher_query.drop_constraints(key).run
+          _cypher_query.drop_constraint(key).run
         else
           _cypher_query.drop_index(key).run
         end

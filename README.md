@@ -103,8 +103,8 @@ l = Neoon::Cypher::Query.new('Person') #=> #<Neoon::Cypher::Query:0x007fe8926d20
 l.create_index(:name).run
 # l.drop_index(:name).run
 
-l.create_constraints(:username).run
-# l.drop_constraints(:username).run
+l.create_constraint(:username).run
+# l.drop_constraint(:username).run
 
 l.list_indexes                         #=> { :name => true, :username => "UNIQUENESS" }
 ```
