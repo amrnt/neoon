@@ -6,6 +6,14 @@ module Neoon
     class SchemaException < Exception; end
     class CypherException < Exception; end
 
+    # custom
+    class NodeNotFoundException < Exception; end
+
+    # org.neo4j.kernel.impl.api.constraints
+    class ConstraintValidationKernelException < Exception; end
+    class UnableToValidateConstraintKernelException < Exception; end
+    class UniqueConstraintViolationKernelException < Exception; end
+
     # org.neo4j.kernel.api.exceptions
     class BeginTransactionFailureException < Exception; end
     class ConstraintCreationException < Exception; end

@@ -3,6 +3,10 @@ module Neoon
     module Node
 
       def neo_node
+        if _cypher_query.find_node.run.data.empty?
+          excep = { :message => "Cannot find node with id [#{_cypher_query.id}] in database.", :exception => "NodeNotFoundException" }
+          raise Neoon::Error::NodeNotFoundException, "#{excep}"
+        end
         _cypher_query.find_node.run.data.first.first.data
       end
 
@@ -17,7 +21,7 @@ module Neoon
       end
 
       def neo_node_properties
-        _neo_node.merge({ :_id => self.id })
+        _neo_node.merge(:_id => self.id)
       end
 
     protected

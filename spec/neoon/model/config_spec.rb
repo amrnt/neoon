@@ -6,6 +6,14 @@ describe Neoon::Model::Config do
     require 'app/models/topic'
   end
 
+  it 'responds to .neoon' do
+    expect(Topic).to respond_to(:neoon)
+  end
+
+  it 'responds to .neo_model_config' do
+    expect(Topic).to respond_to(:neo_model_config)
+  end
+
   it 'returns the model config singleton' do
     expect(Topic.neo_model_config.class).to eq Neoon::Model::Config
   end

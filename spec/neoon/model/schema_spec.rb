@@ -9,7 +9,7 @@ describe Neoon::Model::Schema do
 
   context 'list index' do
     context 'from model config' do
-      it 'responds to neo_schema_index_keys' do
+      it 'responds to .neo_schema_index_keys' do
         expect(Topic).to respond_to(:neo_schema_index_keys)
       end
       it 'returns all indexed properties' do
@@ -52,7 +52,7 @@ describe Neoon::Model::Schema do
     end
 
     context 'create index' do
-      it 'responds to neo_index_create' do
+      it 'responds to .neo_index_create' do
         expect(Topic).to respond_to(:neo_index_create)
       end
 
@@ -75,7 +75,7 @@ describe Neoon::Model::Schema do
         Topic.neo_index_create(:slug)
       end
 
-      it 'responds to neo_index_drop' do
+      it 'responds to .neo_index_drop' do
         expect(Topic).to respond_to(:neo_index_drop)
       end
 

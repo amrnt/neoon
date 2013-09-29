@@ -10,19 +10,11 @@ module Neoon
       end
 
       def to_cypher
-        if query.is_a?(Array)
-          query.map { |q| q.gsub(/\s+/, ' ').strip }
-        else
-          query.gsub(/\s+/, ' ').strip
-        end
+        query.gsub(/\s+/, ' ').strip
       end
 
       def run
-        if query.is_a?(Array)
-          query.each { |q| make_cypher_request(q, args) }
-        else
-          make_cypher_request(query, args)
-        end
+        make_cypher_request(query, args)
       end
 
     protected

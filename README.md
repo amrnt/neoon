@@ -130,7 +130,7 @@ c.create_node.run  #=> Create object node / or update it
 c.delete_node.run  #=> Remove object node
 ```
 
-Note that the key of finding nodes in Neo4j is `id` as saved in Neo4j with key `db_id`.
+Note that the key of finding nodes in Neo4j is `id` as saved in Neo4j with key `_id`.
 
 Another example on the model we defined above:
 

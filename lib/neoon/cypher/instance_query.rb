@@ -7,7 +7,7 @@ module Neoon
       def initialize(object)
         @id     = object.id
         @label  = object.class.name
-        @args   = object.neo_node_properties
+        @args   = object.neo_node_properties.merge(:_id => id)
       end
 
       def find_node
