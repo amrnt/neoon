@@ -5,10 +5,10 @@ module Neoon
       attr_reader :connection
 
       def initialize(url)
-        @uri = URI.parse(url)
-        end_point = "#{@uri.scheme}://#{@uri.host}:#{@uri.port}#{@uri.path}"
+        uri = URI.parse(url)
+        end_point = "#{uri.scheme}://#{uri.host}:#{uri.port}#{uri.path}"
         @connection ||= Faraday.new(end_point, connection_options.merge(:builder => middleware))
-        @connection.basic_auth(@uri.user, @uri.password) if @uri.user && @uri.password
+        @connection.basic_auth(uri.user, uri.password) if uri.user && uri.password
       end
 
       include Request
@@ -26,7 +26,7 @@ module Neoon
           :request => {
             :open_timeout => 5,
             :timeout => 10,
-          },
+          }
         }
       end
 

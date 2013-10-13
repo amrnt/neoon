@@ -100,11 +100,11 @@ Topic.neo_schema_update #=> [:name, :slug]
 ```ruby
 l = Neoon::Cypher::Query.new('Person') #=> #<Neoon::Cypher::Query:0x007fe8926d2068 @label="Person">
 
-l.create_index(:name).run
-# l.drop_index(:name).run
+l.create_index(:name)
+# l.drop_index(:name)
 
-l.create_constraint(:username).run
-# l.drop_constraint(:username).run
+l.create_constraint(:username)
+# l.drop_constraint(:username)
 
 l.list_indexes                         #=> { :name => true, :username => "UNIQUENESS" }
 ```
@@ -125,9 +125,9 @@ cus = Customer.new(50, {:name => 'Julie', :address => 'PS'}) #=> #<Neoon::Cypher
 
 c = Neoon::Cypher::InstanceQuery.new(cus)
 
-c.find_node.run    #=> Return node in Neo4j if already saved
-c.create_node.run  #=> Create object node / or update it
-c.delete_node.run  #=> Remove object node
+c.find_node    #=> Return node in Neo4j if already saved
+c.create_node  #=> Create object node / or update it
+c.delete_node  #=> Remove object node
 ```
 
 Note that the key of finding nodes in Neo4j is `id` as saved in Neo4j with key `_id`.
@@ -137,9 +137,9 @@ Another example on the model we defined above:
 ```ruby
 t = Neoon::Cypher::InstanceQuery.new(Topic.first) #=> #<Neoon::Cypher::InstanceQuery:0x007fe894410b98 @id=1, @label="Topic", @args={...}>
 
-t.find_node.run    #=> Returns node in Neo4j if already saved
-t.create_node.run  #=> Create object node / or update it
-t.delete_node.run  #=> Remove object node
+t.find_node    #=> Returns node in Neo4j if already saved
+t.create_node  #=> Create object node / or update it
+t.delete_node  #=> Remove object node
 ```
 
 ---

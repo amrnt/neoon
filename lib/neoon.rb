@@ -14,6 +14,7 @@ require 'neoon/cypher/handler'
 require 'neoon/cypher/schema/indexes'
 require 'neoon/cypher/schema/constraints'
 require 'neoon/cypher/query'
+require 'neoon/cypher/node/operations'
 require 'neoon/cypher/instance_query'
 
 require 'neoon/model/config'
