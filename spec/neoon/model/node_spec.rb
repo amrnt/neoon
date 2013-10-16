@@ -44,7 +44,7 @@ describe Neoon::Model::Node do
 
     it 'doesn\'t exist in neo4j' do
       topic.destroy
-      expect { topic.neo_node }.to raise_error Neoon::Error::NodeNotFoundException
+      expect { topic.neo_node }.to raise_error Neoon::Error::NotFoundError
     end
 
     it 'has 0 record' do

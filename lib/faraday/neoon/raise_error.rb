@@ -5,10 +5,12 @@ module Faraday
       def call(env)
         @app.call(env).on_complete do |env|
           case env[:status]
+          when 404
+            raise ::Neoon::Error::NotFoundError.new(env[:response])
           when (400..499)
-            raise "Neoon::Error::#{JSON.parse(env[:body])["cause"]["exception"]}".constantize.new(env[:response], env[:response].body)
+            raise ::Neoon::Error::ClientError.new(env[:response])
           when (500..599)
-            raise 'Something went error with Neo4j server.'
+            raise ::Neoon::Error::ServerError.new(env[:response])
           end
         end
       end

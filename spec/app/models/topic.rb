@@ -1,5 +1,5 @@
 class Topic < ActiveRecord::Base
-  include Neoon::Node
+  include Neoon::Model
 
   neoon do |c|
     c.property :name, :index => true

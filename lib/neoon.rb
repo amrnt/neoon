@@ -15,13 +15,13 @@ require 'neoon/cypher/schema/indexes'
 require 'neoon/cypher/schema/constraints'
 require 'neoon/cypher/query'
 require 'neoon/cypher/node/operations'
-require 'neoon/cypher/instance_query'
+require 'neoon/cypher/node/query'
 
 require 'neoon/model/config'
 require 'neoon/model/schema'
 require 'neoon/model/node'
 
-require 'neoon/node'
+require 'neoon/model'
 
 
 if defined?(Rails)

@@ -2,6 +2,7 @@ module Neoon
   module Client
     class Connection
 
+      include Request
       attr_reader :connection
 
       def initialize(url)
@@ -11,22 +12,17 @@ module Neoon
         @connection.basic_auth(uri.user, uri.password) if uri.user && uri.password
       end
 
-      include Request
-
     private
 
       def connection_options
-        @connection_options ||= {
-          :headers => {
-            :accept => 'application/json',
-            :content_type => 'application/json; charset=UTF-8',
-            :x_stream => 'true',
-            :user_agent => ['Neoon', Neoon::VERSION].join(' ')
-          },
+        @connection_options ||= { :headers => {
+          :accept => 'application/json',
+          :content_type => 'application/json; charset=UTF-8',
+          :x_stream => 'true',
+          :user_agent => ['Neoon', Neoon::VERSION].join(' ') },
           :request => {
             :open_timeout => 5,
-            :timeout => 10,
-          }
+            :timeout => 10 }
         }
       end
 
@@ -36,7 +32,6 @@ module Neoon
           builder.use FaradayMiddleware::Mashify
           builder.use FaradayMiddleware::ParseJson, :content_type => /\bjson$/
           builder.use Faraday::Neoon::RaiseError
-
           builder.adapter Faraday.default_adapter
         end
       end

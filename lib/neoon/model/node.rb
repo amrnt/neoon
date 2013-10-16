@@ -6,7 +6,7 @@ module Neoon
         _node = _cypher_query.find_node.result.data
         if _node.empty?
           excep = { :message => "Cannot find node with id [#{_cypher_query.id}] in database.", :exception => "NodeNotFoundException" }
-          raise Neoon::Error::NodeNotFoundException.new excep, excep
+          raise Neoon::Error::NotFoundError.new excep
         end
         _node.first.first.data
       end
@@ -28,7 +28,7 @@ module Neoon
     protected
 
       def _cypher_query
-        Neoon::Cypher::InstanceQuery.new(self)
+        Neoon::Cypher::Node::Query.new(self)
       end
 
       def _neo_node

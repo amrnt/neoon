@@ -63,8 +63,8 @@ describe Neoon::Model::Schema do
         expect(Topic.neo_index_create(:slug)).to be_true
         expect(Topic.neo_index_list.keys).to eql [:name, :slug]
 
-        expect(Topic.neo_index_create(:name).result[:error].class).to eq Neoon::Error::AlreadyIndexedException
-        expect(Topic.neo_index_create(:slug).result[:error].class).to eq Neoon::Error::AlreadyConstrainedException
+        expect(Topic.neo_index_create(:name).result[:error].class).to eq Neoon::Error::ClientError
+        expect(Topic.neo_index_create(:slug).result[:error].class).to eq Neoon::Error::ClientError
       end
 
     end
@@ -86,8 +86,8 @@ describe Neoon::Model::Schema do
         expect(Topic.neo_index_drop(:slug)).to be_true
         expect(Topic.neo_index_list.keys).to eql []
 
-        expect(Topic.neo_index_drop(:name).result[:error].class).to eq Neoon::Error::DropIndexFailureException
-        expect(Topic.neo_index_drop(:slug).result[:error].class).to eq Neoon::Error::DropIndexFailureException
+        expect(Topic.neo_index_drop(:name).result[:error].class).to eq Neoon::Error::ClientError
+        expect(Topic.neo_index_drop(:slug).result[:error].class).to eq Neoon::Error::ClientError
       end
     end
 
