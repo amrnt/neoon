@@ -6,15 +6,7 @@ module Faraday
         @app.call(env).on_complete do |env|
           case env[:status]
           when (400..499)
-            body = JSON.parse(env[:body])
-            raise "Neoon::Error::#{body["cause"]["exception"]}".constantize, "#{{
-              :message => body["message"],
-              :exception => body["exception"],
-              :cause => {
-                :message => body["cause"]["message"],
-                :exception => body["cause"]["exception"]
-              }
-            } if env[:body]}"
+            raise "Neoon::Error::#{JSON.parse(env[:body])["cause"]["exception"]}".constantize.new(env[:response], env[:response].body)
           when (500..599)
             raise 'Something went error with Neo4j server.'
           end

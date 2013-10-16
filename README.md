@@ -83,12 +83,12 @@ end
 This will be used internally to auto index models nodes.
 
 ```ruby
-Topic.neo_index_list #=> [:name, :slug]
+Topic.neo_index_list #=> { :name => true, :slug => "UNIQUENESS" }
 
 #
 # Sync the indexed nodes as described in each model config. It returns the indexed fields.
 # Remember, this will be called on each model on the boot if preload_models set to true.
-Topic.neo_schema_update #=> [:name, :slug]
+Topic.neo_schema_update #=> { :name => true, :slug => "UNIQUENESS" }
 ```
 
 ---
@@ -98,7 +98,7 @@ Topic.neo_schema_update #=> [:name, :slug]
 `Neoon::Cypher::InstanceQuery` should be initialized with an Class name or `label`. You can use `Neoon::Cypher::Query` to manually create indexes, constraints, etc.
 
 ```ruby
-l = Neoon::Cypher::Query.new('Person') #=> #<Neoon::Cypher::Query:0x007fe8926d2068 @label="Person">
+l = Neoon::Cypher::Query.new('Person')
 
 l.create_index(:name)
 # l.drop_index(:name)
@@ -121,7 +121,7 @@ Use it with Struct:
 
 ```ruby
 Customer = Struct.new(:id, :neo_node_properties)
-cus = Customer.new(50, {:name => 'Julie', :address => 'PS'}) #=> #<Neoon::Cypher::InstanceQuery:0x007feb35953d00 @id=50, @label="Customer", @args={:name=>"Julie", :address=>"PS"}>
+cus = Customer.new(50, {:name => 'Julie', :address => 'PS'})
 
 c = Neoon::Cypher::InstanceQuery.new(cus)
 
@@ -135,7 +135,7 @@ Note that the key of finding nodes in Neo4j is `id` as saved in Neo4j with key `
 Another example on the model we defined above:
 
 ```ruby
-t = Neoon::Cypher::InstanceQuery.new(Topic.first) #=> #<Neoon::Cypher::InstanceQuery:0x007fe894410b98 @id=1, @label="Topic", @args={...}>
+t = Neoon::Cypher::InstanceQuery.new(Topic.first)
 
 t.find_node    #=> Returns node in Neo4j if already saved
 t.create_node  #=> Create object node / or update it

@@ -1,7 +1,15 @@
 module Neoon
   module Error
 
-    class Exception < StandardError; end
+    class Exception < StandardError
+      attr_reader :response
+
+      def initialize(response, message)
+        @response = response
+        super(message)
+      end
+    end
+
     class IndexException < Exception; end
     class SchemaException < Exception; end
     class CypherException < Exception; end

@@ -3,11 +3,12 @@ module Neoon
     module Node
 
       def neo_node
-        if _cypher_query.find_node.result.data.empty?
+        _node = _cypher_query.find_node.result.data
+        if _node.empty?
           excep = { :message => "Cannot find node with id [#{_cypher_query.id}] in database.", :exception => "NodeNotFoundException" }
-          raise Neoon::Error::NodeNotFoundException, "#{excep}"
+          raise Neoon::Error::NodeNotFoundException.new excep, excep
         end
-        _cypher_query.find_node.result.data.first.first.data
+        _node.first.first.data
       end
 
       def neo_create

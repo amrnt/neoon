@@ -12,7 +12,6 @@ module Neoon
         else
           _cypher_query.create_index(key)
         end
-        true
       end
 
       def neo_index_drop key
@@ -21,7 +20,6 @@ module Neoon
         else
           _cypher_query.drop_index(key)
         end
-        true
       end
 
       def neo_index_drop_all
