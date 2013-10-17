@@ -1,6 +1,5 @@
 module Neoon
   module Model
-
     module ClassMethods
       attr_reader :neo_model_config
 
@@ -28,6 +27,5 @@ module Neoon
 
       Neoon.config.models << receiver
     end
-
   end
 end

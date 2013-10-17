@@ -4,7 +4,7 @@ class Topic < ActiveRecord::Base
   neoon do |c|
     c.property :name, :index => true
     c.property :slug, :index => :unique do
-      "#{self.id}-#{self.name.underscore}"
+      "#{self.id}-#{self.name.parameterize}"
     end
     c.property :created_at
   end

@@ -3,35 +3,34 @@ module Neoon
     module Node
 
       def neo_node
-        _node = _cypher_query.find_node.result.data
-        if _node.empty?
-          excep = { :message => "Cannot find node with id [#{_cypher_query.id}] in database.", :exception => "NodeNotFoundException" }
-          raise Neoon::Error::NotFoundError.new excep
+        node = cypher_query.find_node.result
+        if node.data && node.data.empty?
+          raise Neoon::Error::NotFoundError.new({}, "Cannot find node with id [#{cypher_query.id}] in database.")
         end
-        _node.first.first.data
+        node
       end
 
-      def neo_create
-        _cypher_query.create_node.result.data
+      def neo_save
+        cypher_query.save_node
       end
-      alias_method :neo_save,   :neo_create
-      alias_method :neo_update, :neo_create
+      alias_method :neo_create, :neo_save
+      alias_method :neo_update, :neo_save
 
       def neo_destroy
-        _cypher_query.delete_node.result.data
+        cypher_query.destroy_node
       end
 
       def neo_node_properties
-        _neo_node.merge(:_id => self.id)
+        build_neo_node.merge(:_id => self.id)
       end
 
     protected
 
-      def _cypher_query
+      def cypher_query
         Neoon::Cypher::Node::Query.new(self)
       end
 
-      def _neo_node
+      def build_neo_node
         return {} unless self.class.neo_model_config.properties
         hash = self.class.neo_model_config.properties.inject({}) do |all, (field, block)|
           all[field] = if block[:block]
